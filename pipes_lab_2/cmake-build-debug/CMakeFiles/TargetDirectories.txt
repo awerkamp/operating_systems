@@ -1,0 +1,3 @@
+/Users/awerkamp/Programming/13_varun_OS/operating_systems/pipes_lab_2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/awerkamp/Programming/13_varun_OS/operating_systems/pipes_lab_2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/awerkamp/Programming/13_varun_OS/operating_systems/pipes_lab_2/cmake-build-debug/CMakeFiles/lab02.dir

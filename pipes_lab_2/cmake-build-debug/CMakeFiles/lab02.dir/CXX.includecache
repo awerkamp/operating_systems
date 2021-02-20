@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/awerkamp/Programming/13_varun_OS/operating_systems/pipes_lab_2/main.cpp
+iostream
+-
+unistd.h
+-
+

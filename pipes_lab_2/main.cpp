@@ -1,19 +1,31 @@
 #include <iostream>
 #include <unistd.h>
+#include <cerrno>
 
 using namespace std;
+
+void check_sys_call_code(int sys_call_code) {
+    if (sys_call_code == -1) {
+        perror("Error: ");
+        std::cout << strerror(errno) << std::endl;
+    }
+}
 
 int main(int argc, char **argv) {
 
     int msg_pipe[2];
     int msg_size_pipe[2];
-    pipe(msg_pipe);
-    pipe(msg_size_pipe);
+    int sys_call_code;
+    sys_call_code = pipe(msg_pipe);
+    check_sys_call_code(sys_call_code);
+    sys_call_code = pipe(msg_size_pipe);
+    check_sys_call_code(sys_call_code);
 
     pid_t pid = fork();
 
     if (pid > 0) {
         // parent process
+        cout << "Parent" << endl;
 
         close (msg_size_pipe[0]);
         close (msg_pipe[0]);
@@ -35,16 +47,18 @@ int main(int argc, char **argv) {
             newMessage[i] = message[i];
         }
 
-        write (msg_pipe[1], newMessage, size + 1);
+        sys_call_code = write (msg_pipe[1], newMessage, size + 1);
+        check_sys_call_code(sys_call_code);
         close (msg_pipe[1]);
 
         char newSize[1];
         newSize[0] = (char)size;
 
-        write(msg_size_pipe[1], newSize, 2);
+        sys_call_code = write(msg_size_pipe[1], newSize, 2);
+        check_sys_call_code(sys_call_code);
         close (msg_size_pipe[1]);
 
-        cout << "Parent Sent Message: Waiting for Child" << endl;
+        cout << "Parent Sent Message" << endl << "Waiting for Child" << endl;
         wait(nullptr);
 
         cout << "Parent Exiting" << endl;
@@ -53,20 +67,23 @@ int main(int argc, char **argv) {
 
     else if (pid == 0) {
         // child process
+        cout << "Child" << endl;
 
         close(msg_size_pipe[1]);
         close(msg_pipe[1]);
 
         char size[1];
 
-        read(msg_size_pipe[0], size, 2);
+        sys_call_code = read(msg_size_pipe[0], size, 2);
+        check_sys_call_code(sys_call_code);
         close(msg_size_pipe[0]);
 
         int found_size = (unsigned char)size[0];
 
         char message[found_size];
 
-        read(msg_pipe[0], message, found_size + 1);
+        sys_call_code = read(msg_pipe[0], message, found_size + 1);
+        check_sys_call_code(sys_call_code);
         close(msg_pipe[0]);
 
         string final_message;
